@@ -1,18 +1,42 @@
-import React from "react";
-import Home from "./pages/home/home";
-import { Navigate,BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState } from "react";
+import Topbar  from "./components/topbar/topbar"
+import Note from "./components/Note/Note";
+import CreateArea from "./components/CreateArea/CreateArea";
 
 function App() {
+  const [notes, setNotes] = useState([]);
+
+  function addNote(newNote) {
+    setNotes(prevNotes => {
+      return [...prevNotes, newNote];
+    });
+  }
+
+  function deleteNote(id) {
+    setNotes(prevNotes => {
+      return prevNotes.filter((noteItem, index) => {
+        return index !== id;
+      });
+    });
+  }
+
   return (
-    <div className="App">
-    {/* <Router>
-      <Routes>
-        <Route exact path="/" element={<Home />} />
-      </Routes>
-    </Router> */}
-    <Home />
+    <div>
+      <Topbar />
+      <CreateArea onAdd={addNote} />
+      {notes.map((noteItem, index) => {
+        return (
+          <Note
+            key={index}
+            id={index}
+            title={noteItem.title}
+            content={noteItem.content}
+            onDelete={deleteNote}
+          />
+        );
+      })}
     </div>
-  )
+  );
 }
 
 export default App;
